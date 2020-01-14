@@ -10,7 +10,14 @@ module.exports = {
 
     computeSSS: function(input) {
         const salaryCredit = 1000 + (500 * 1);
-        return 0;
+
+        return {
+            whole: salaryCredit,
+            part: {
+                employee: salaryCredit * 0.0363,
+                employer: salaryCredit * 0.0737
+            }
+        };
     },
 
     computePhilhealth: function(input) {
