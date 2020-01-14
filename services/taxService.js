@@ -9,13 +9,12 @@ module.exports = {
     },
 
     computeSSS: function(input) {
-        const salaryCredit = 1000 + (500 * 1);
-
+        const salaryCredit = this.getSalaryCredit(input.monthlySalary);
         return {
-            whole: salaryCredit,
+            whole: salaryCredit * 0.11,
             part: {
-                employee: salaryCredit * 0.0363,
-                employer: salaryCredit * 0.0737
+                employee: Math.round(salaryCredit * (0.036 + 3 / 9000) * 10) / 10,
+                employer: Math.round(salaryCredit * (0.073 + 6 / 9000) * 10) / 10
             }
         };
     },
@@ -79,5 +78,10 @@ module.exports = {
                 return category;
             }
         });
+    },
+
+    getSalaryCredit: function (salary) {
+        salary = (salary >= 15750) ? 15750 : salary;
+        return (Math.ceil((salary - 1249.99) / 500) * 500) + 1000;
     }
 };
