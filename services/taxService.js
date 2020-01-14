@@ -14,11 +14,15 @@ module.exports = {
     },
 
     computePhilhealth: function(input) {
-        let salary = input.monthlySalary <= 10000 ? 10000 : input.monthlySalary;
+        let year = 
+            parseInt(input.year) < 2019 ? 2019 : 
+                (parseInt(input.year) > 2024 ? 2024 : input.year) ; 
+
+        let salary = 
+            input.monthlySalary <= 10000 ? 10000 : 
+                (input.monthlySalary > philhealth[input.year].maxSalary ? philhealth[input.year].maxSalary : input.monthlySalary);
         
-        salary = salary > philhealth[input.year].maxSalary ? philhealth[input.year].maxSalary : salary;
-        
-        return salary * philhealth[input.year].rate/2;
+        return salary * philhealth[year].rate/2;
     },
 
     computePagibig: function(input) {
