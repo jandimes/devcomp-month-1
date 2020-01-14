@@ -5,7 +5,7 @@ const router = express.Router();
 router.get("/", (req, res) => {
     const input = {
         monthlySalary: parseFloat(req.query.monthlySalary, 10),
-        year: parseFloat(req.query.year, 10)
+        year: parseInt(req.query.year, 10)
     };
 
     const data = {
