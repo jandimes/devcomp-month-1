@@ -15,29 +15,18 @@ module.exports = {
 
     computePhilhealth: function(input) {
         const philhealth = require('../configs/philhealthTable');
-<<<<<<< HEAD
-        
-        let year = 
-            parseInt(input.year) < 2019 ? 2019 : 
-                (input.year > 2024 ? 2024 : input.year) ; 
-=======
         const year = (input.year < 2019) ? 2019 :
             (input.year > 2024) ? 2024 : input.year;
         const salary = (input.monthlySalary <= 10000) ? 10000 :
             (input.monthlySalary > philhealth[input.year].maxSalary) ? philhealth[input.year].maxSalary : input.monthlySalary;
         const contribution = salary * philhealth[year].rate;
->>>>>>> 547b4eef01ae16b3bec1ca1c430cb653f353fae9
 
         return {
             whole: contribution,
-<<<<<<< HEAD
-            employee_contribution: contribution/2,
-=======
             part: {
                 employee: contribution / 2,
                 employer: contribution / 2
             }
->>>>>>> 547b4eef01ae16b3bec1ca1c430cb653f353fae9
         };
     },
 
