@@ -23,7 +23,12 @@ module.exports = {
             input.monthlySalary <= 10000 ? 10000 : 
                 (input.monthlySalary > philhealth[input.year].maxSalary ? philhealth[input.year].maxSalary : input.monthlySalary);
         
-        return salary * philhealth[year].rate/2;
+        let contribution = salary * philhealth[year].rate;        
+        
+        return {
+            whole: contribution,
+            employee_contribution: contribution/2
+        };
     },
 
     computePagibig: function(input) {
