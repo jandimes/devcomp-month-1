@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
         monthlySalary: parseFloat(req.query.monthlySalary, 10),
         year: parseInt(req.query.year, 10)
     };
-    
+
     const taxService = service(input);
 
     const data = {

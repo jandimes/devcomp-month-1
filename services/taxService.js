@@ -4,6 +4,7 @@ module.exports = (input) => {
             const taxCategory = this.getWithholdingTaxCategory(input.year, input.monthlySalary);
             return taxCategory.exemption + taxCategory.excessRate * (input.monthlySalary - taxCategory.minSalary);
         },
+
         computeTotalYearlyIncomeTax: function() {
             return 0;
         },
