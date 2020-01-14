@@ -1,3 +1,5 @@
+const philhealth = require('../configs/philhealthTable');
+
 module.exports = {
     computeMonthlyWithholdingTax: function(input) {
         const taxCategory = this.getWithholdingTaxCategory(input.year, input.monthlySalary);
@@ -14,7 +16,20 @@ module.exports = {
     },
 
     computePhilhealth: function(input) {
-        return 0;
+        let year = 
+            parseInt(input.year) < 2019 ? 2019 : 
+                (parseInt(input.year) > 2024 ? 2024 : input.year) ; 
+
+        let salary = 
+            input.monthlySalary <= 10000 ? 10000 : 
+                (input.monthlySalary > philhealth[input.year].maxSalary ? philhealth[input.year].maxSalary : input.monthlySalary);
+        
+        let contribution = salary * philhealth[year].rate;        
+        
+        return {
+            whole: contribution,
+            employee_contribution: contribution/2
+        };
     },
 
     computePagibig: function(input) {
