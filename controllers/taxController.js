@@ -1,4 +1,5 @@
 const express = require("express");
+const taxService = require("../services/taxService");
 const router = express.Router();
 
 router.get("/", (req, res) => {
@@ -8,12 +9,12 @@ router.get("/", (req, res) => {
     };
 
     const data = {
-        monthlyWithholdingTax: computeMonthlyWithholdingTax(input),
-        totalYearlyIncomeTax: computeTotalYearlyIncomeTax(input),
-        sss: computeSSS(input),
-        philhealth: computePhilhealth(input),
-        pagibig: computePagibig(input),
-        thirteenthMonthPayTax: computeThirteenthMonthPayTax(input)
+        monthlyWithholdingTax: taxService.computeMonthlyWithholdingTax(input),
+        totalYearlyIncomeTax: taxService.computeTotalYearlyIncomeTax(input),
+        sss: taxService.computeSSS(input),
+        philhealth: taxService.computePhilhealth(input),
+        pagibig: taxService.computePagibig(input),
+        thirteenthMonthPayTax: taxService.computeThirteenthMonthPayTax(input)
     };
 
     const response = {
@@ -24,31 +25,5 @@ router.get("/", (req, res) => {
 
     return res.json(response);
 });
-
-
-
-function computeMonthlyWithholdingTax(input) {
-    return 0;
-}
-
-function computeTotalYearlyIncomeTax(input) {
-    return 0;
-}
-
-function computeSSS(input) {
-    return 0;
-}
-
-function computePhilhealth(input) {
-    return 0;
-}
-
-function computePagibig(input) {
-    return 0;
-}
-
-function computeThirteenthMonthPayTax(input) {
-    return 0;
-}
 
 module.exports = router;
