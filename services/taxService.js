@@ -38,14 +38,17 @@ module.exports = {
     },
 
     computePagibig: function(input) {
-        let percentage = input.monthlySalary == 1500 ? 0.02 : 0.01;
-        let mandatory = input.monthlySalary * percentage;
-        let contribution = input.monthlySalary > 1500 ? 100 : mandatory;
-        let employer_contribution = input.monthlySalary * 0.02;
+        const percentage = input.monthlySalary == 1500 ? 0.02 : 0.01;
+        const mandatory = input.monthlySalary * percentage;
+        const contribution = input.monthlySalary > 1500 ? 100 : mandatory;
+        const employer_contribution = input.monthlySalary * 0.02;
 
         return {
             whole: contribution + employer_contribution,
-            employee_contribution: contribution
+            part: {
+                employee: contribution,
+                employer: employer_contribution
+            }
         };
     },
 
