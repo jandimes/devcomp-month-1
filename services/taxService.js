@@ -28,15 +28,19 @@ module.exports = {
         return {
             whole: contribution,
             employee_contribution: contribution/2,
-            annual: contribution * 12 
         };
     },
 
     computePagibig: function(input) {
-        let percentage = input.salary == 1500 ? 0.02 : 0.01
+        let percentage = input.monthlySalary == 1500 ? 0.02 : 0.01;
+        let mandatory = input.monthlySalary * percentage;
+        let contribution = input.monthlySalary > 1500 ? 100 : mandatory;
+        let employer_contribution = input.monthlySalary * 0.02;
 
-        let contribution = (input.salary * percentage) > 1500
-        return contribution;
+        return {
+            whole: contribution + employer_contribution,
+            employee_contribution: contribution
+        };
     },
 
     computeThirteenthMonthPayTax: function(input) {
