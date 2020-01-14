@@ -2,7 +2,8 @@ const philhealth = require('../configs/philhealthTable');
 
 module.exports = {
     computeMonthlyWithholdingTax: function(input) {
-        return 0;
+        const taxCategory = this.getWithholdingTaxCategory(input.year, input.monthlySalary);
+        return taxCategory.exemption + taxCategory.excessRate * (input.monthlySalary - taxCategory.minSalary);
     },
 
     computeTotalYearlyIncomeTax: function(input) {
@@ -31,5 +32,30 @@ module.exports = {
 
     computeThirteenthMonthPayTax: function(input) {
         return 0;
+    },
+
+
+
+    getWithholdingTaxCategory: function(year, salary) {
+        const yearCategories = require("../configs/withholdingTaxTable");
+        const yearCategory = yearCategories.find((category) => {
+            if (category.minYear === null && year <= category.maxYear) {
+                return category;
+            } else if (category.maxYear === null && year >= category.minYear) {
+                return category;
+            } else if (year >= category.minYear && year <= category.maxYear) {
+                return category;
+            }
+        });
+
+        return (yearCategory.categories).find((category) => {
+            if (category.minSalary === null && salary <= category.maxSalary) {
+                return category;
+            } else if (category.maxSalary === null && salary >= category.minSalary) {
+                return category;
+            } else if (salary >= category.minSalary && salary <= category.maxSalary) {
+                return category;
+            }
+        });
     }
 };
