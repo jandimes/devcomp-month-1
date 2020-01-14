@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
-const taxController = require("./controllers/taxController");
+
+let taxController = require("./controllers/taxController");
 
 app.use("/tax", taxController);
 
