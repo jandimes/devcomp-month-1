@@ -9,6 +9,7 @@ module.exports = {
     },
 
     computeSSS: function(input) {
+        const salaryCredit = 1000 + (500 * 1);
         return 0;
     },
 
