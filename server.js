@@ -1,7 +1,7 @@
 const http = require("http");
 
 const app = require("./app");
-const serverConfig = require("./config/server");
+const serverConfig = require("./configs/server");
 
 const server = http.createServer(app);
 server.listen(serverConfig.port, serverConfig.ip, function() {
