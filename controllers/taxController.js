@@ -1,20 +1,23 @@
 const express = require("express");
-const taxService = require("../services/taxService");
+const service = require("../services/taxService");
 const router = express.Router();
 
 router.get("/", (req, res) => {
+    
     const input = {
         monthlySalary: parseFloat(req.query.monthlySalary, 10),
         year: parseInt(req.query.year, 10)
     };
+    
+    const taxService = service(input);
 
     const data = {
-        monthlyWithholdingTax: taxService.computeMonthlyWithholdingTax(input),
-        totalYearlyIncomeTax: taxService.computeTotalYearlyIncomeTax(input),
-        sss: taxService.computeSSS(input),
-        philhealth: taxService.computePhilhealth(input),
-        pagibig: taxService.computePagibig(input),
-        thirteenthMonthPayTax: taxService.computeThirteenthMonthPayTax(input)
+        monthlyWithholdingTax: taxService.computeMonthlyWithholdingTax(),
+        totalYearlyIncomeTax: taxService.computeTotalYearlyIncomeTax(),
+        sss: taxService.computeSSS(),
+        philhealth: taxService.computePhilhealth(),
+        pagibig: taxService.computePagibig(),
+        thirteenthMonthPayTax: taxService.computeThirteenthMonthPayTax()
     };
 
     const response = {
