@@ -13,7 +13,7 @@ module.exports = (reqParams) => {
             
             return {
                 monthlyWithholdingTax: this.computeMonthlyWithholdingTax(contriSSS.part.employee, contriPhilhealth.part.employee, contriPagibig.part.employee),
-                totalYearlyIncomeTax: this.computeTotalYearlyIncomeTax(),
+                totalYearlyIncomeTax: this.computeTotalYearlyIncomeTax(contriSSS.part.employee, contriPhilhealth.part.employee, contriPagibig.part.employee),
                 sss: contriSSS,
                 philhealth: contriPhilhealth,
                 pagibig: contriPagibig,
@@ -74,7 +74,13 @@ module.exports = (reqParams) => {
         computeTotalYearlyIncomeTax: function(contriSSS, contriPhilhealth, contriPagibig) {
             const taxableIncomeAnual = (input.monthlySalary - (contriSSS + contriPhilhealth + contriPagibig)) * 12;
 
-            return 0;
+            if ((taxableIncomeAnual) <=  250000) {
+                return 0;
+            } else {
+                const params = this.getRangeComp(taxableIncomeAnual);
+                return (((taxableIncomeAnual - params.excessOver) * params.percentage) + params.additional);
+            }
+            
         },
 
         computeThirteenthMonthPayTax: function() {
@@ -110,14 +116,23 @@ module.exports = (reqParams) => {
             return (Math.ceil((salary - 1249.99) / 500) * 500) + 1000;
         },
 
-        getRangeType: function (annualSalary) {
+        getRangeComp: function (annualSalary) {
+            const taxCompute = require('../configs/incomeTaxTable');
+            let index = null;
+
             if (annualSalary > 250000.01 && annualSalary < 400000) {
-                return 0;
+                index = 0;
             } else if (annualSalary > 400000.01 && annualSalary < 800000) {
-                return 1;
+                index = 1;
             } else if (annualSalary > 800000.01 && annualSalary < 2000000) {
-                return 2;
+                index = 2;
+            } else if (annualSalary > 2000000.01 && annualSalary < 8000000) {
+                index = 3;
+            } else {
+                index = 4;
             }
+
+            return taxCompute[index];
         }
 
     
