@@ -10,11 +10,11 @@ module.exports = (reqParams) => {
             const contriSSS = this.computeSSS();
             const contriPhilhealth = this.computePhilHealth();
             const contriPagibig = this.computePagibig();
-            const thirteenthMonthPayTax = this.computeThirteenthMonthPayTax();
+            const thirteenthMonthPayTax = parseFloat(this.computeThirteenthMonthPayTax().toFixed(2));
 
             return {
                 monthlyWithholdingTax: this.computeMonthlyWithholdingTax(contriSSS.part.employee, contriPhilhealth.part.employee, contriPagibig.part.employee),
-                totalYearlyIncomeTax: this.computeTotalYearlyIncomeTax(contriSSS.part.employee, contriPhilhealth.part.employee, contriPagibig.part.employee),
+                totalYearlyIncomeTax: parseFloat(this.computeTotalYearlyIncomeTax(contriSSS.part.employee, contriPhilhealth.part.employee, contriPagibig.part.employee).toFixed(2), 10),
                 sss: contriSSS,
                 philhealth: contriPhilhealth,
                 pagibig: contriPagibig,
