@@ -7,7 +7,7 @@ module.exports = (reqParams) => {
 
     return {
         getData: function() {
-            const contriSSS = this.computePagibig();
+            const contriSSS = this.computeSSS();
             const contriPhilhealth = this.computePhilHealth();
             const contriPagibig = this.computePagibig();
 
