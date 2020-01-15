@@ -1,12 +1,12 @@
-module.exports = (input) => { 
+module.exports = (input) => {
     return {
-        getData:function() {
-            const contriPAGIBIG = function() {
+        getData: function() {
+            const computePAGIBIG = function() {
                 const percentage = input.monthlySalary == 1500 ? 0.02 : 0.01;
                 const mandatory = input.monthlySalary * percentage;
                 const contribution = input.monthlySalary > 1500 ? 100 : mandatory;
                 const employer_contribution = input.monthlySalary * 0.02;
-                
+
                 return {
                     whole: contribution + employer_contribution,
                     part: {
@@ -15,10 +15,10 @@ module.exports = (input) => {
                     }
                 };
             }
-            
-            const contriSSS = function() {
+
+            const computeSSS = function() {
                 const salaryCredit = this.getSalaryCredit(input.monthlySalary);
-                
+
                 return {
                     whole: salaryCredit * 0.11,
                     part: {
@@ -27,15 +27,15 @@ module.exports = (input) => {
                     }
                 };
             }
-        
-            const contriPhilHealth = function() {
+
+            const computePhilHealth = function() {
                 const philhealth = require('../configs/philhealthTable');
                 const year = (input.year < 2019) ? 2019 :
                     (input.year > 2024) ? 2024 : input.year;
                 const salary = (input.monthlySalary <= 10000) ? 10000 :
                     (input.monthlySalary > philhealth[input.year].maxSalary) ? philhealth[input.year].maxSalary : input.monthlySalary;
                 const contribution = salary * philhealth[year].rate;
-        
+
                 return {
                     whole: contribution,
                     part: {
@@ -44,20 +44,20 @@ module.exports = (input) => {
                     }
                 }
             }
-        
-            const monthlyWithholdingTax = function() {
+
+            const computeMonthlyWithholdingTax = function() {
                 const taxCategory = this.getWithholdingTaxCategory(input.year, input.monthlySalary);
                 return taxCategory.exemption + taxCategory.excessRate * (input.monthlySalary - taxCategory.minSalary);
             }
-        
-            const totalYearlyIncomeTax = function() {
+
+            const computeTotalYearlyIncomeTax = function() {
                 return 0;
             }
-        
-            const thirteenthMonthPayTax = function() {
+
+            const computeThirteenthMonthPayTax = function() {
                 return 0;
             }
-        
+
             getWithholdingTaxCategory = function(year, salary) {
                 const yearCategories = require("../configs/withholdingTaxTable");
                 const yearCategory = yearCategories.find((category) => {
@@ -69,7 +69,7 @@ module.exports = (input) => {
                         return category;
                     }
                 });
-        
+
                 return (yearCategory.categories).find((category) => {
                         if (category.minSalary === null && salary <= category.maxSalary) {
                             return category;
@@ -81,18 +81,19 @@ module.exports = (input) => {
                         }
                     );
             }
-        
+
             getSalaryCredit = function (salary) {
                 salary = (salary >= 15750) ? 15750 : salary;
                 return (Math.ceil((salary - 1249.99) / 500) * 500) + 1000;
             }
+
             return {
-                monthlyWithholdingTax: monthlyWithholdingTax(),
-                totalYearlyIncomeTax: totalYearlyIncomeTax(),
-                sss: contriSSS(),
-                philhealth: contriPhilHealth(),
-                pagibig: contriPAGIBIG(),
-                thirteenthMonthPayTax: thirteenthMonthPayTax()
+                monthlyWithholdingTax: computeMonthlyWithholdingTax(),
+                totalYearlyIncomeTax: computeTotalYearlyIncomeTax(),
+                sss: computeSSS(),
+                philhealth: computePhilHealth(),
+                pagibig: computePAGIBIG(),
+                thirteenthMonthPayTax: computeThirteenthMonthPayTax()
             }
         }
     }
