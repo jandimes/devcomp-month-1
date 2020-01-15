@@ -2,20 +2,11 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/", (req, res) => {
-    
-    const input = {
-        monthlySalary: parseFloat(req.query.monthlySalary, 10),
-        year: parseInt(req.query.year, 10)
-    };
-
-    const taxService =  require("../services/taxService")(input);
-
+    const taxService =  require("../services/taxService")(req.query);
     const response = {
         success: true,
-        data: taxService.getData(),
-        message: "Tax computed. "
+        data: taxService.getData()
     };
-
     return res.json(response);
 });
 
