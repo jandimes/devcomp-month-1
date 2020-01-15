@@ -1,4 +1,7 @@
-# Solution
+# Requirement
+
+1. NodeJS
+2. NPM
 
 # Run in Command
 
@@ -13,12 +16,12 @@
 >```
 
 > **API Endpoint**
->``` bash
+>```` bash
 > http://localhost:8080/tax?monthlySalary={monthlySalary}&year={year}
->```
+>````
 
 > **Query params**
->``` bash
+>```` bash
 > monthlySalary = integer
 > year = integer
->```
+>````
