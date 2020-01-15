@@ -8,19 +8,17 @@ module.exports = (input) => {
         computeTotalYearlyIncomeTax: function() {
             return 0;
         },
-
         computeSSS: function() {
-            const salaryCredit = 1000 + (500 * 1);
-
-            return {
-                whole: salaryCredit,
-                part: {
-                    employee: salaryCredit * 0.0363,
-                    employer: salaryCredit * 0.0737
-                }
-            };
+        const salaryCredit = this.getSalaryCredit(input.monthlySalary);
+        
+        return {
+            whole: salaryCredit * 0.11,
+            part: {
+                employee: Math.round(salaryCredit * (0.036 + 3 / 9000) * 10) / 10,
+                employer: Math.round(salaryCredit * (0.073 + 6 / 9000) * 10) / 10
+            }
+        };
         },
-
         computePhilhealth: function() {
             const philhealth = require('../configs/philhealthTable');
             const year = (input.year < 2019) ? 2019 :
@@ -37,7 +35,6 @@ module.exports = (input) => {
                 }
             };
         },
-
         computePagibig: function() {
             const percentage = input.monthlySalary == 1500 ? 0.02 : 0.01;
             const mandatory = input.monthlySalary * percentage;
@@ -52,31 +49,34 @@ module.exports = (input) => {
                 }
             };
         },
-
         computeThirteenthMonthPayTax: function() {
             return 0;
         },
         getWithholdingTaxCategory: function(year, salary) {
-            const yearCategories = require("../configs/withholdingTaxTable");
-            const yearCategory = yearCategories.find((category) => {
-                if (category.minYear === null && year <= category.maxYear) {
-                    return category;
-                } else if (category.maxYear === null && year >= category.minYear) {
-                    return category;
-                } else if (year >= category.minYear && year <= category.maxYear) {
-                    return category;
-                }
-            });
+        const yearCategories = require("../configs/withholdingTaxTable");
+        const yearCategory = yearCategories.find((category) => {
+            if (category.minYear === null && year <= category.maxYear) {
+                return category;
+            } else if (category.maxYear === null && year >= category.minYear) {
+                return category;
+            } else if (year >= category.minYear && year <= category.maxYear) {
+                return category;
+            }
+        });
 
-            return (yearCategory.categories).find((category) => {
-                if (category.minSalary === null && salary <= category.maxSalary) {
-                    return category;
-                } else if (category.maxSalary === null && salary >= category.minSalary) {
-                    return category;
-                } else if (salary >= category.minSalary && salary <= category.maxSalary) {
-                    return category;
-                }
-            });
+        return (yearCategory.categories).find((category) => {
+            if (category.minSalary === null && salary <= category.maxSalary) {
+                return category;
+            } else if (category.maxSalary === null && salary >= category.minSalary) {
+                return category;
+            } else if (salary >= category.minSalary && salary <= category.maxSalary) {
+                return category;
+            }
+        });
+        },
+        getSalaryCredit: function (salary) {
+            salary = (salary >= 15750) ? 15750 : salary;
+            return (Math.ceil((salary - 1249.99) / 500) * 500) + 1000;
         }
     }
 };

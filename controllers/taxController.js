@@ -1,5 +1,4 @@
 const express = require("express");
-const service = require("../services/taxService");
 const router = express.Router();
 
 router.get("/", (req, res) => {
@@ -9,7 +8,7 @@ router.get("/", (req, res) => {
         year: parseInt(req.query.year, 10)
     };
 
-    const taxService = service(input);
+    const taxService =  require("../services/taxService")(input);
 
     const data = {
         monthlyWithholdingTax: taxService.computeMonthlyWithholdingTax(),
