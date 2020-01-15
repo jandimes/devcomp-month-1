@@ -78,7 +78,7 @@ module.exports = (reqParams) => {
             if ((taxableIncomeAnual) <=  250000) {
                 return 0;
             } else {
-                const params = this.getRangeComp(taxableIncomeAnual);
+                const params = this.getIncomeTaxParam(taxableIncomeAnual);
                 return (((taxableIncomeAnual - params.excessOver) * params.percentage) + params.additional);
             }
             
@@ -123,7 +123,7 @@ module.exports = (reqParams) => {
             return (Math.ceil((salary - 1249.99) / 500) * 500) + 1000;
         },
 
-        getRangeComp: function (annualSalary) {
+        getIncomeTaxParam: function (annualSalary) {
             const taxCompute = require('../configs/incomeTaxTable');
             let index = null;
 
