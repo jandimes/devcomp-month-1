@@ -10,14 +10,15 @@ module.exports = (reqParams) => {
             const contriSSS = this.computeSSS();
             const contriPhilhealth = this.computePhilHealth();
             const contriPagibig = this.computePagibig();
-            
+            const thirteenthMonthPayTax = this.computeThirteenthMonthPayTax();
+
             return {
                 monthlyWithholdingTax: this.computeMonthlyWithholdingTax(contriSSS.part.employee, contriPhilhealth.part.employee, contriPagibig.part.employee),
                 totalYearlyIncomeTax: this.computeTotalYearlyIncomeTax(),
                 sss: contriSSS,
                 philhealth: contriPhilhealth,
                 pagibig: contriPagibig,
-                thirteenthMonthPayTax: this.computeThirteenthMonthPayTax()
+                thirteenthMonthPayTax: thirteenthMonthPayTax
             }
         },
 
@@ -78,6 +79,12 @@ module.exports = (reqParams) => {
         },
 
         computeThirteenthMonthPayTax: function() {
+            if (input.year < 2018 && input.monthlySalary > 82000) {
+                return (input.monthlySalary - 82000) / 12;
+            } else if (input.year >= 2018 && input.monthlySalary > 90000) {
+                return (input.monthlySalary - 90000) / 12;
+            }
+
             return 0;
         },
 
@@ -120,6 +127,6 @@ module.exports = (reqParams) => {
             }
         }
 
-    
+
     }
 };
