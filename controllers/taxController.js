@@ -10,18 +10,9 @@ router.get("/", (req, res) => {
 
     const taxService =  require("../services/taxService")(input);
 
-    const data = {
-        monthlyWithholdingTax: taxService.computeMonthlyWithholdingTax(),
-        totalYearlyIncomeTax: taxService.computeTotalYearlyIncomeTax(),
-        sss: taxService.computeSSS(),
-        philhealth: taxService.computePhilhealth(),
-        pagibig: taxService.computePagibig(),
-        thirteenthMonthPayTax: taxService.computeThirteenthMonthPayTax()
-    };
-
     const response = {
         success: true,
-        data: data,
+        data: taxService.getData(),
         message: "Tax computed. "
     };
 
