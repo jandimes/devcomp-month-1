@@ -10,7 +10,7 @@ module.exports = (reqParams) => {
             const contriSSS = this.computeSSS();
             const contriPhilhealth = this.computePhilHealth();
             const contriPagibig = this.computePagibig();
-
+            
             return {
                 monthlyWithholdingTax: this.computeMonthlyWithholdingTax(contriSSS.part.employee, contriPhilhealth.part.employee, contriPagibig.part.employee),
                 totalYearlyIncomeTax: this.computeTotalYearlyIncomeTax(),
@@ -38,7 +38,7 @@ module.exports = (reqParams) => {
             const year = (input.year < 2019) ? 2019 :
                 (input.year > 2024) ? 2024 : input.year;
             const salary = (input.monthlySalary <= 10000) ? 10000 :
-                (input.monthlySalary > philhealth[input.year].maxSalary) ? philhealth[input.year].maxSalary : input.monthlySalary;
+                (input.monthlySalary > philhealth[year].maxSalary) ? philhealth[year].maxSalary : input.monthlySalary;
             const contribution = salary * philhealth[year].rate;
 
             return {
@@ -71,7 +71,9 @@ module.exports = (reqParams) => {
             return taxCategory.exemption + taxCategory.excessRate * (input.monthlySalary - taxCategory.minSalary);
         },
 
-        computeTotalYearlyIncomeTax: function() {
+        computeTotalYearlyIncomeTax: function(contriSSS, contriPhilhealth, contriPagibig) {
+            const taxableIncomeAnual = (input.monthlySalary - (contriSSS + contriPhilhealth + contriPagibig)) * 12;
+
             return 0;
         },
 
@@ -106,6 +108,18 @@ module.exports = (reqParams) => {
         getSalaryCredit: function (salary) {
             salary = (salary >= 15750) ? 15750 : salary;
             return (Math.ceil((salary - 1249.99) / 500) * 500) + 1000;
+        },
+
+        getRangeType: function (annualSalary) {
+            if (annualSalary > 250000.01 && annualSalary < 400000) {
+                return 0;
+            } else if (annualSalary > 400000.01 && annualSalary < 800000) {
+                return 1;
+            } else if (annualSalary > 800000.01 && annualSalary < 2000000) {
+                return 2;
+            }
         }
+
+    
     }
 };
