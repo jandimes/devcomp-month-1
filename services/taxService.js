@@ -10,12 +10,13 @@ module.exports = (reqParams) => {
             const contriSSS = this.computeSSS();
             const contriPhilhealth = this.computePhilHealth();
             const contriPagibig = this.computePagibig();
+
             const taxableIncome = input.monthlySalary - (contriSSS.part.employee + contriPhilhealth.part.employee + contriPagibig.part.employee);
-            const thirteenthMonthPayTax = parseFloat(this.computeThirteenthMonthPayTax());
-            const incomeTax = this.computeIncomeTax(taxableIncome);
-            const yearlyIncome = parseFloat(((incomeTax * 12) + thirteenthMonthPayTax).toFixed(2), 10);
-            const monthlyWithholdingTax = this.computeMonthlyWithholdingTax(taxableIncome); 
-            
+            const thirteenthMonthPayTax = this.computeThirteenthMonthPayTax();
+            const incomeTax = this.computeIncomeTax(taxableIncome + thirteenthMonthPayTax);
+            const yearlyIncome = parseFloat(((incomeTax * 12)).toFixed(2), 10);
+            const monthlyWithholdingTax = this.computeMonthlyWithholdingTax(taxableIncome);
+
             return {
                 monthlyWithholdingTax: monthlyWithholdingTax,
                 totalYearlyIncomeTax: yearlyIncome,
@@ -28,7 +29,6 @@ module.exports = (reqParams) => {
 
         computeSSS: function() {
             const salaryCredit = this.getSalaryCredit(input.monthlySalary);
-
             return {
                 whole: salaryCredit * 0.11,
                 part: {
@@ -56,16 +56,15 @@ module.exports = (reqParams) => {
         },
 
         computePagibig: function() {
-            const percentage = input.monthlySalary == 1500 ? 0.02 : 0.01;
-            const mandatory = input.monthlySalary * percentage;
-            const contribution = input.monthlySalary > 1500 ? 100 : mandatory;
-            const employer_contribution = input.monthlySalary * 0.02;
+            const percentage = (input.monthlySalary <= 1500) ? 0.02 : 0.01;
+            const contribution = (input.monthlySalary > 1500) ? 100 : (input.monthlySalary * percentage);
+            const employerContribution = input.monthlySalary * 0.02;
 
             return {
-                whole: contribution + employer_contribution,
+                whole: contribution + employerContribution,
                 part: {
                     employee: contribution,
-                    employer: employer_contribution
+                    employer: employerContribution
                 }
             };
         },
@@ -77,24 +76,20 @@ module.exports = (reqParams) => {
 
         computeIncomeTax: function(salary) {
             const taxableIncomeAnual = salary * 12;
-
-            if ((taxableIncomeAnual) <=  250000) {
+            if (taxableIncomeAnual <=  250000) {
                 return 0;
-            } else {
-                const params = this.getIncomeTaxParam(taxableIncomeAnual);
-
-                return (((taxableIncomeAnual - params.excessOver) * params.percentage) + params.additional)/12;
             }
-            
+
+            const params = this.getIncomeTaxParam(taxableIncomeAnual);
+            return (((taxableIncomeAnual - params.excessOver) * params.percentage) + params.additional) / 12;
         },
 
         computeThirteenthMonthPayTax: function() {
             if (input.year < 2018 && input.monthlySalary > 82000) {
-                return this.computeIncomeTax(input.monthlySalary);
+                return (input.monthlySalary - 82000) / 12;
             } else if (input.year >= 2018 && input.monthlySalary > 90000) {
-                return this.computeIncomeTax(input.monthlySalary);;
+                return (input.monthlySalary - 90000) / 12;
             }
-
             return 0;
         },
 
@@ -111,15 +106,14 @@ module.exports = (reqParams) => {
             });
 
             return (yearCategory.categories).find((category) => {
-                    if (category.minSalary === null && salary <= category.maxSalary) {
-                        return category;
-                    } else if (category.maxSalary === null && salary >= category.minSalary) {
-                        return category;
-                    } else if (salary >= category.minSalary && salary <= category.maxSalary) {
-                        return category;
-                    }
-                    }
-                );
+                if (category.minSalary === null && salary <= category.maxSalary) {
+                    return category;
+                } else if (category.maxSalary === null && salary >= category.minSalary) {
+                    return category;
+                } else if (salary >= category.minSalary && salary <= category.maxSalary) {
+                    return category;
+                }
+            });
         },
 
         getSalaryCredit: function (salary) {
@@ -145,7 +139,6 @@ module.exports = (reqParams) => {
 
             return taxCompute[index];
         }
-
 
     }
 };
