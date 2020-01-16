@@ -14,9 +14,10 @@ module.exports = (reqParams) => {
             const thirteenthMonthPayTax = parseFloat(this.computeThirteenthMonthPayTax());
             const incomeTax = this.computeIncomeTax(taxableIncome);
             const yearlyIncome = parseFloat(((incomeTax * 12) + thirteenthMonthPayTax).toFixed(2), 10);
-
+            const monthlyWithholdingTax = this.computeMonthlyWithholdingTax(taxableIncome); 
+            
             return {
-                monthlyWithholdingTax: this.computeMonthlyWithholdingTax(contriSSS.part.employee, contriPhilhealth.part.employee, contriPagibig.part.employee),
+                monthlyWithholdingTax: monthlyWithholdingTax,
                 totalYearlyIncomeTax: yearlyIncome,
                 sss: contriSSS,
                 philhealth: contriPhilhealth,
@@ -69,8 +70,7 @@ module.exports = (reqParams) => {
             };
         },
 
-        computeMonthlyWithholdingTax: function(contriSSS, contriPhilhealth, contriPagibig) {
-            const taxableIncome = input.monthlySalary - (contriSSS + contriPhilhealth + contriPagibig);
+        computeMonthlyWithholdingTax: function(taxableIncome) {
             const taxCategory = this.getWithholdingTaxCategory(input.year, taxableIncome);
             return taxCategory.exemption + taxCategory.excessRate * (input.monthlySalary - taxCategory.minSalary);
         },
