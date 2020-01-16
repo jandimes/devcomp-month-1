@@ -81,7 +81,8 @@ module.exports = (reqParams) => {
             }
 
             const params = this.getIncomeTaxParam(taxableIncomeAnual);
-            return (((taxableIncomeAnual - params.excessOver) * params.percentage) + params.additional) / 12;
+            const yearType = input.year < 2023 ? 0 : 1;
+            return (((taxableIncomeAnual - params.excessOver) * params.percentage[yearType]) + params.additional[yearType]) / 12;
         },
 
         computeThirteenthMonthPayTax: function() {
