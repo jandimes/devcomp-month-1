@@ -1,4 +1,8 @@
 module.exports = {
+   2018 : {
+        rate: 0.0275,
+        maxSalary: 40000 
+   },
    2019 : {
         rate: 0.0275,
         maxSalary: 50000 

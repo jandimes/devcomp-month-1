@@ -10,11 +10,14 @@ module.exports = (reqParams) => {
             const contriSSS = this.computeSSS();
             const contriPhilhealth = this.computePhilHealth();
             const contriPagibig = this.computePagibig();
-            const thirteenthMonthPayTax = parseFloat(this.computeThirteenthMonthPayTax().toFixed(2));
+            const taxableIncome = input.monthlySalary - (contriSSS.part.employee + contriPhilhealth.part.employee + contriPagibig.part.employee);
+            const thirteenthMonthPayTax = parseFloat(this.computeIncomeTax(input.monthlySalary));
+            const incomeTax = this.computeIncomeTax(taxableIncome);
+            const yearlyIncome = parseFloat(((incomeTax * 12) + thirteenthMonthPayTax).toFixed(2), 10);
 
             return {
                 monthlyWithholdingTax: this.computeMonthlyWithholdingTax(contriSSS.part.employee, contriPhilhealth.part.employee, contriPagibig.part.employee),
-                totalYearlyIncomeTax: parseFloat(this.computeTotalYearlyIncomeTax(contriSSS.part.employee, contriPhilhealth.part.employee, contriPagibig.part.employee).toFixed(2), 10),
+                totalYearlyIncomeTax: yearlyIncome,
                 sss: contriSSS,
                 philhealth: contriPhilhealth,
                 pagibig: contriPagibig,
@@ -36,7 +39,7 @@ module.exports = (reqParams) => {
 
         computePhilHealth: function() {
             const philhealth = require('../configs/philhealthTable');
-            const year = (input.year < 2019) ? 2019 :
+            const year = (input.year < 2018) ? 2018 :
                 (input.year > 2024) ? 2024 : input.year;
             const salary = (input.monthlySalary <= 10000) ? 10000 :
                 (input.monthlySalary > philhealth[year].maxSalary) ? philhealth[year].maxSalary : input.monthlySalary;
@@ -72,23 +75,24 @@ module.exports = (reqParams) => {
             return taxCategory.exemption + taxCategory.excessRate * (input.monthlySalary - taxCategory.minSalary);
         },
 
-        computeTotalYearlyIncomeTax: function(contriSSS, contriPhilhealth, contriPagibig) {
-            const taxableIncomeAnual = (input.monthlySalary - (contriSSS + contriPhilhealth + contriPagibig)) * 12;
+        computeIncomeTax: function(salary) {
+            const taxableIncomeAnual = salary * 12;
 
             if ((taxableIncomeAnual) <=  250000) {
                 return 0;
             } else {
                 const params = this.getIncomeTaxParam(taxableIncomeAnual);
-                return (((taxableIncomeAnual - params.excessOver) * params.percentage) + params.additional);
+
+                return (((taxableIncomeAnual - params.excessOver) * params.percentage) + params.additional)/12;
             }
             
         },
 
-        computeThirteenthMonthPayTax: function() {
+        computeThirteenthMonthPayTax: function(yearlyIncome) {
             if (input.year < 2018 && input.monthlySalary > 82000) {
-                return (input.monthlySalary - 82000) / 12;
+                return yearlyIncome / 12;
             } else if (input.year >= 2018 && input.monthlySalary > 90000) {
-                return (input.monthlySalary - 90000) / 12;
+                return yearlyIncome / 12;
             }
 
             return 0;
