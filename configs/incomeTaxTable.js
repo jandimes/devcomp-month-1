@@ -1,13 +1,13 @@
 module.exports = [
     {
         excessOver: 250000,
-        additional: 0,
-        percentage: 0.2
+        additional: [0,0],
+        percentage: [0.2,0.15]
     },
     {
         excessOver: 400000,
-        additional: 30000,
-        percentage: 0.25
+        additional: [30000,22500],
+        percentage: [0.25,0.2]
     },
     {
         excessOver: 800000,
