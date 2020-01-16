@@ -11,7 +11,7 @@ module.exports = (reqParams) => {
             const contriPhilhealth = this.computePhilHealth();
             const contriPagibig = this.computePagibig();
             const taxableIncome = input.monthlySalary - (contriSSS.part.employee + contriPhilhealth.part.employee + contriPagibig.part.employee);
-            const thirteenthMonthPayTax = parseFloat(this.computeIncomeTax(input.monthlySalary));
+            const thirteenthMonthPayTax = parseFloat(this.computeThirteenthMonthPayTax());
             const incomeTax = this.computeIncomeTax(taxableIncome);
             const yearlyIncome = parseFloat(((incomeTax * 12) + thirteenthMonthPayTax).toFixed(2), 10);
 
@@ -88,11 +88,11 @@ module.exports = (reqParams) => {
             
         },
 
-        computeThirteenthMonthPayTax: function(yearlyIncome) {
+        computeThirteenthMonthPayTax: function() {
             if (input.year < 2018 && input.monthlySalary > 82000) {
-                return yearlyIncome / 12;
+                return this.computeIncomeTax(input.monthlySalary);
             } else if (input.year >= 2018 && input.monthlySalary > 90000) {
-                return yearlyIncome / 12;
+                return this.computeIncomeTax(input.monthlySalary);;
             }
 
             return 0;
