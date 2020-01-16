@@ -12,14 +12,19 @@ module.exports = (reqParams) => {
             const contriPagibig = this.computePagibig();
 
             const taxableIncome = input.monthlySalary - (contriSSS.part.employee + contriPhilhealth.part.employee + contriPagibig.part.employee);
-            const thirteenthMonthPayTax = this.computeThirteenthMonthPayTax();
-            const incomeTax = this.computeIncomeTax(taxableIncome + thirteenthMonthPayTax);
-            const yearlyIncome = parseFloat(((incomeTax * 12)).toFixed(2), 10);
+            const thirteenthMonthPayTaxableIncome = this.getThirteenthMonthPayTaxableIncome();
+
+            const monthlyIncomeTax = this.computeMonthlyIncomeTax(taxableIncome);
+            const completeMonthlyIncomeTax = this.computeMonthlyIncomeTax(taxableIncome + thirteenthMonthPayTaxableIncome);
+
+            const thirteenthMonthPayTax = completeMonthlyIncomeTax - monthlyIncomeTax;
+
+            const totalYearlyIncomeTax = parseFloat(((completeMonthlyIncomeTax * 12)).toFixed(2), 10);
             const monthlyWithholdingTax = this.computeMonthlyWithholdingTax(taxableIncome);
 
             return {
                 monthlyWithholdingTax: monthlyWithholdingTax,
-                totalYearlyIncomeTax: yearlyIncome,
+                totalYearlyIncomeTax: totalYearlyIncomeTax,
                 sss: contriSSS,
                 philhealth: contriPhilhealth,
                 pagibig: contriPagibig,
@@ -74,7 +79,7 @@ module.exports = (reqParams) => {
             return taxCategory.exemption + taxCategory.excessRate * (input.monthlySalary - taxCategory.minSalary);
         },
 
-        computeIncomeTax: function(salary) {
+        computeMonthlyIncomeTax: function(salary) {
             const taxableIncomeAnual = salary * 12;
             if (taxableIncomeAnual <=  250000) {
                 return 0;
@@ -85,7 +90,7 @@ module.exports = (reqParams) => {
             return (((taxableIncomeAnual - params.excessOver) * params.percentage[yearType]) + params.additional[yearType]) / 12;
         },
 
-        computeThirteenthMonthPayTax: function() {
+        getThirteenthMonthPayTaxableIncome: function() {
             if (input.year < 2018 && input.monthlySalary > 82000) {
                 return (input.monthlySalary - 82000) / 12;
             } else if (input.year >= 2018 && input.monthlySalary > 90000) {
