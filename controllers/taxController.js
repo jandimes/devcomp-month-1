@@ -3,11 +3,7 @@ const router = express.Router();
 
 router.get("/", (req, res) => {
     const taxService =  require("../services/taxService")(req.query);
-    const response = {
-        success: true,
-        data: taxService.getData()
-    };
-    return res.json(response);
+    return res.send(taxService.getData());
 });
 
 module.exports = router;
