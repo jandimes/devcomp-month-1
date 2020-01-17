@@ -17,9 +17,8 @@ module.exports = (reqParams) => {
             const monthlyIncomeTax = this.computeMonthlyIncomeTax(taxableIncome);
             const completeMonthlyIncomeTax = this.computeMonthlyIncomeTax(taxableIncome + thirteenthMonthPayTaxableIncome);
 
-            const thirteenthMonthPayTax = completeMonthlyIncomeTax - monthlyIncomeTax;
-
-            const totalYearlyIncomeTax = parseFloat(((completeMonthlyIncomeTax * 12)).toFixed(2), 10);
+            const thirteenthMonthPayTax = (completeMonthlyIncomeTax - monthlyIncomeTax) * 12;
+            const totalYearlyIncomeTax = parseFloat(((completeMonthlyIncomeTax * 12)).toFixed(2), 10) - thirteenthMonthPayTax;
             const monthlyWithholdingTax = this.computeMonthlyWithholdingTax(taxableIncome);
 
             return {
