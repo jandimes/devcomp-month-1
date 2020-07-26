@@ -1,3 +1,5 @@
+const { response } = require('express');
+
 module.exports = (reqParams) => {
 
     const input = {
@@ -21,51 +23,58 @@ module.exports = (reqParams) => {
             const thirteenthMonthPayTax = (completeMonthlyIncomeTax - monthlyIncomeTax) * 12;
             const totalYearlyIncomeTax = parseFloat(((completeMonthlyIncomeTax * 12)).toFixed(2), 10) - thirteenthMonthPayTax;
             const monthlyWithholdingTax = this.computeMonthlyWithholdingTax(taxableIncome);
+            
+            let response = {
+                monthlyIncomeTax: monthlyIncomeTax,
+                sss_deduction: contriSSS.part.employee.toFixed(2),
+                phlhealth_deduction: contriPhilhealth.part.employee.toFixed(2),
+                pagibig_deduction: contriPagibig.part.employee
+            }
+            return JSON.parse(JSON.stringify(response))
+        //     return `
+        //         <h3>
+        //             Given that the monthly salary is ₱<i style="color:#0052cc;">${input.monthlySalary.toFixed(2)}</i> in year <i style="color:#0052cc;">${input.year}</i>,
+        //         </h3>
 
-            return `
-                <h3>
-                    Given that the monthly salary is ₱<i style="color:#0052cc;">${input.monthlySalary.toFixed(2)}</i> in year <i style="color:#0052cc;">${input.year}</i>,
-                </h3>
+        //         <p>
+        //             The <b>total yearly income tax</b> will be ₱<i style="color:#0052cc;">${totalYearlyIncomeTax.toFixed(2)}</i>;
+        //         </p>
 
-                <p>
-                    The <b>total yearly income tax</b> will be ₱<i style="color:#0052cc;">${totalYearlyIncomeTax.toFixed(2)}</i>;
-                </p>
+        //         <p>
+        //             The <b>monthly withholding tax</b> will be ₱<i style="color:#0052cc;">${monthlyWithholdingTax.toFixed(2)}</i>;
+        //         </p>
 
-                <p>
-                    The <b>monthly withholding tax</b> will be ₱<i style="color:#0052cc;">${monthlyWithholdingTax.toFixed(2)}</i>;
-                </p>
+        //         <p>
+        //             The <b>13th month pay tax</b> will be ₱<i style="color:#0052cc;">${thirteenthMonthPayTax.toFixed(2)}</i>; and
+        //         </p>
 
-                <p>
-                    The <b>13th month pay tax</b> will be ₱<i style="color:#0052cc;">${thirteenthMonthPayTax.toFixed(2)}</i>; and
-                </p>
-
-                <p>
-                    The <b>total contribution</b> will be ₱<i style="color:#0052cc;">${contriTotal.toFixed(2)}</i>;
-                </p>
-                <ul>
-                    <li>
-                        The <b>SSS contribution</b> will be ₱<i style="color:#0052cc;">${contriSSS.whole.toFixed(2)}</i>;
-                        <ul>
-                            <li><b>Employee</b>: ₱<i style="color:#0052cc;">${contriSSS.part.employee.toFixed(2)}</i></li>
-                            <li><b>Employer</b>: ₱<i style="color:#0052cc;">${contriSSS.part.employer.toFixed(2)}</i></li>
-                        </ul>
-                    </li>
-                    <li>
-                        The <b>PhilHealth contribution</b> will be ₱<i style="color:#0052cc;">${contriPhilhealth.whole}</i>;
-                        <ul>
-                            <li><b>Employee</b>: ₱<i style="color:#0052cc;">${contriPhilhealth.part.employee.toFixed(2)}</i></li>
-                            <li><b>Employer</b>: ₱<i style="color:#0052cc;">${contriPhilhealth.part.employer.toFixed(2)}</i></li>
-                        </ul>
-                    </li>
-                    <li>
-                        The <b>Pagibig contribution</b> will be ₱<i style="color:#0052cc;">${contriPagibig.whole.toFixed(2)}</i>;
-                        <ul>
-                            <li><b>Employee</b>: ₱<i style="color:#0052cc;">${contriPagibig.part.employee.toFixed(2)}</i></li>
-                            <li><b>Employer</b>: ₱<i style="color:#0052cc;">${contriPagibig.part.employer.toFixed(2)}</i></li>
-                        </ul>
-                    </li>
-                </ul>
-            `;
+        //         <p>
+        //             The <b>total contribution</b> will be ₱<i style="color:#0052cc;">${contriTotal.toFixed(2)}</i>;
+        //         </p>
+        //         <ul>
+        //             <li>
+        //                 The <b>SSS contribution</b> will be ₱<i style="color:#0052cc;">${contriSSS.whole.toFixed(2)}</i>;
+        //                 <ul>
+        //                     <li><b>Employee</b>: ₱<i style="color:#0052cc;">${contriSSS.part.employee.toFixed(2)}</i></li>
+        //                     <li><b>Employer</b>: ₱<i style="color:#0052cc;">${contriSSS.part.employer.toFixed(2)}</i></li>
+        //                 </ul>
+        //             </li>
+        //             <li>
+        //                 The <b>PhilHealth contribution</b> will be ₱<i style="color:#0052cc;">${contriPhilhealth.whole}</i>;
+        //                 <ul>
+        //                     <li><b>Employee</b>: ₱<i style="color:#0052cc;">${contriPhilhealth.part.employee.toFixed(2)}</i></li>
+        //                     <li><b>Employer</b>: ₱<i style="color:#0052cc;">${contriPhilhealth.part.employer.toFixed(2)}</i></li>
+        //                 </ul>
+        //             </li>
+        //             <li>
+        //                 The <b>Pagibig contribution</b> will be ₱<i style="color:#0052cc;">${contriPagibig.whole.toFixed(2)}</i>;
+        //                 <ul>
+        //                     <li><b>Employee</b>: ₱<i style="color:#0052cc;">${contriPagibig.part.employee.toFixed(2)}</i></li>
+        //                     <li><b>Employer</b>: ₱<i style="color:#0052cc;">${contriPagibig.part.employer.toFixed(2)}</i></li>
+        //                 </ul>
+        //             </li>
+        //         </ul>
+        //     `;
         },
 
         computeSSS: function() {
